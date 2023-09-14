@@ -9,7 +9,7 @@ def validate_subnet(subnet_mask):
     subnet_pattern = re.compile(r'^(1\d|[1-9]|[12]\d|32)$')
     return bool(subnet_pattern.match(subnet_mask))
 
-############# main ###############
+############# main ##############
 valid_input = False
 
 while not valid_input:
