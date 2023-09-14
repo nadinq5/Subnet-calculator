@@ -10,9 +10,11 @@ def validate_subnet(subnet_mask):
     return bool(subnet_pattern.match(subnet_mask))
 
 ############# main ###############
-while True:
+valid_input = False
+
+while not valid_input:
     cidr_input = input("Enter CIDR notation (1-32) or leave empty: ")
     if validate_subnet(cidr_input):
-        break  
+        valid_input = True
     else:
         print("Invalid CIDR notation. Must be between 1-32. Please try again.")
