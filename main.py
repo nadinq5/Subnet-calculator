@@ -15,7 +15,6 @@ cidr = input()
 if (validate_cidr(cidr)):
     subnet_mask = calculate_mask(cidr)
 
-
 if (cidr == ""):
     subnet_mask = calculate_class_mask(ip)
 
