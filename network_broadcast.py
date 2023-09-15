@@ -4,7 +4,7 @@ from itertools import chain
 
 #def network_broadcast_address(subnet_mask, subnet_amount, ip_address):
 subnet_mask = "255.128.0.0"
-ip_address = "172.24.0.0"
+ip_address = "39.229.177.100"
 
 subnet_list = subnet_mask.split('.')
 ip_list = ip_address.split('.')
@@ -41,14 +41,31 @@ binary_string = "".join(str(broadcast_id_chain[j]) for j in range(len(broadcast_
 octet = [binary_string[i:i+8] for i in range(0, 32, 8)]
 bin_broadcast_id = '.'.join(octet)
 
-print(bin_network_id)
-print(bin_broadcast_id)
 
 network_id = ".".join(str(int((bin_network_id[i:i+8]),2)) for i in range(0, 35, 9))
 broadcast_id = ".".join(str(int((bin_broadcast_id[i:i+8]),2)) for i in range(0, 35, 9))
-# network_id = [int(bin_network_id[i:i+8],2) for i in range(0, 35, 9)]
+
 print(network_id)
 print(broadcast_id)
+
+if(int(network_id.split(".")[-1]) < 255):
+    first_host = network_id.split(".")[:3]+([str(int(network_id.split(".")[-1]) + 1)])
+    first_host = ".".join(str(first_host[j]) for j in range(len(first_host)))
+elif(int(network_id.split(".")[-1]) == 255):
+    if(int(network_id.split(".")[-2]) < 255):
+        first_host = network_id.split(".")[:2] + ([str(int(network_id.split(".")[-2]) + 1)])
+        first_host = ".".join(str(first_host[j]) for j in range(len(first_host)))
+    elif(int(network_id.split(".")[-2]) == 255):
+        first_host = network_id.split(".")[:1] + ([str(int(network_id.split(".")[-3]) + 1)])
+        first_host = ".".join(str(first_host[j]) for j in range(len(first_host)))
+
+last_host = broadcast_id.split(".")[:3] + [str(int((broadcast_id.split(".")[-1])) - 1)]
+last_host = ".".join(str(last_host[j]) for j in range(len(last_host)))
+
+print(first_host)
+print(last_host)
+
+
 # for i in range(len(bin_ip_address_list)):
 #     network_id.append((bin_subnet_list[i] and bin_ip_address_list[i]).lstrip('0'))
 
