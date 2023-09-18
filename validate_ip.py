@@ -9,6 +9,3 @@ def validate_ip(ip):
         ip = input("Enter IP Address: ")
 
 
-############### Main ################
-ip_address = input("Enter IP Address: ")
-valid_ip = validate_ip(ip_address)

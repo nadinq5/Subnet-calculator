@@ -1,7 +1,17 @@
 import math
+from network_broadcast import*
 def calculate_subnets(number_of_hosts, subnet_mask):
-    number_of_zeroes = subnet_mask.count("0")
-    host_power = int(math.log(number_of_hosts,2)) + 1
+    bin_mask = []
+    subnet_list = subnet_mask.split('.')
+    for octet in list(subnet_list):
+        octet = ipToBin(octet)
+        bin_mask.append(octet)
+
+    number_of_zeroes = (''.join(bin_mask)).count('0')
+    print("THIS IS NUMBER OF ZEROES ",number_of_zeroes)
+
+    host_power = int(math.log(int(number_of_hosts),2)) + 1
+    print("HOST POWER ",host_power)
 
     subnet_power = number_of_zeroes - host_power
     if(subnet_power <= 0):
