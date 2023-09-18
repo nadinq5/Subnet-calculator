@@ -1,8 +1,15 @@
 import string
 from itertools import chain
 
+def joinList(lst):
+    lst = ".".join(str(lst[j]) for j in range(len(lst)))
+    return lst
 
-#def network_broadcast_address(subnet_mask, subnet_amount, ip_address):
+def ipToBin(ip):
+   return (bin(int(ip))[2:]).zfill(8)
+
+
+#def network_broadcast_address(subnet_mask, hosts_amount, subnet_amount, ip_address):
 subnet_mask = "255.128.0.0"
 ip_address = "39.229.177.100"
 
@@ -19,11 +26,12 @@ broadcast_id_chain = []
 
 # Filled in the necessary zeroes while also converting the subnet mask and the ip address to binary
 for item in subnet_list:
-    item = (bin(int(item))[2:]).zfill(8)
+    item = ipToBin(item)
+        #(bin(int(item))[2:]).zfill(8))
     bin_subnet_list.append(item)
 # Filled in the necessary zeroes while also converting the subnet mask and the ip address to binary
 for ip in ip_list:
-    ip = (bin(int(ip))[2:]).zfill(8)
+    ip = ipToBin(ip)
     bin_ip_address_list.append(ip)
 
 # Converted each list to chains, so that it would be easier
@@ -60,50 +68,67 @@ bin_broadcast_id = '.'.join(octet)
 network_id = ".".join(str(int((bin_network_id[i:i+8]),2)) for i in range(0, 35, 9))
 broadcast_id = ".".join(str(int((bin_broadcast_id[i:i+8]),2)) for i in range(0, 35, 9))
 
-print(network_id)
-print(broadcast_id)
+print(f'Network ID: {network_id}')
+
 
 
 if(int(network_id.split(".")[-1]) < 255):
     first_host = network_id.split(".")[:3]+([str(int(network_id.split(".")[-1]) + 1)])
-    first_host = ".".join(str(first_host[j]) for j in range(len(first_host)))
+    first_host = joinList(first_host)
 elif(int(network_id.split(".")[-1]) == 255):
     if(int(network_id.split(".")[-2]) < 255):
         first_host = network_id.split(".")[:2] + ([str(int(network_id.split(".")[-2]) + 1)])
-        first_host = ".".join(str(first_host[j]) for j in range(len(first_host)))
+        first_host = joinList(first_host)
     elif(int(network_id.split(".")[-2]) == 255):
         first_host = network_id.split(".")[:1] + ([str(int(network_id.split(".")[-3]) + 1)])
-        first_host = ".".join(str(first_host[j]) for j in range(len(first_host)))
+        first_host = joinList(first_host)
 
 # Calculates the last host. Takes the last octet in the broadcast and subtracts one from it
 last_host = broadcast_id.split(".")[:3] + [str(int((broadcast_id.split(".")[-1])) - 1)]
-last_host = ".".join(str(last_host[j]) for j in range(len(last_host)))
-
-print(first_host)
-print(last_host)
-
-
-# for i in range(len(bin_ip_address_list)):
-#     network_id.append((bin_subnet_list[i] and bin_ip_address_list[i]).lstrip('0'))
-
-# print(f'{bin_ip_address_list} bin_ip_address_list')
-#
-# for i in range(len(bin_ip_address_list)):
-#     network_id.append((bin_subnet_list[i] and bin_ip_address_list[i]).lstrip('0'))
-#
-#
-# print(network_id)
-#
-# for i in range(len(bin_ip_address_list)):
-#     print(f'{bin_subnet_list[i]} before not')
-#     print(f'{not(bin_subnet_list[i])} after not')
-#     broadcast_id.append((bin_ip_address_list[i] or (not (bin_subnet_list[i]))).lstrip('0'))
-# print(broadcast_id)
+last_host = joinList(last_host)
 
 
 
 
+hosts_amount = 16
+if(int(network_id.split(".")[-1]) < (255 - hosts_amount)):
+    next_subnet_firsthost = network_id.split(".")[:3] + ((([str(int(network_id.split(".")[-1]) + hosts_amount)])))
+    next_subnet_firsthost = joinList(next_subnet_firsthost)
+elif(int(network_id.split(".")[-1]) == 255):
+    if(int(network_id.split(".")[-2]) < (255 - hosts_amount)):
+        first_subnet_broadcast = network_id.split(".")[:2] + ([str(int(network_id.split(".")[-2]) + 1)]) + str(hosts_amount - 1)
+        first_subnet_broadcast = joinList(first_host)
+    elif(int(network_id.split(".")[-2]) == 255):
+        if(int(network_id.split(".")[-3]) < (255 - hosts_amount)):
+            first_subnet_broadcast = network_id.split(".")[:1] + ([str(int(network_id.split(".")[-3]) + 1)]) + "0" + str(hosts_amount - 1)
+            first_subnet_broadcast = joinList(first_host)
 
+
+
+first_subnet_broadcast = next_subnet_firsthost.split(".")[:3] + [str((int(next_subnet_firsthost.split(".")[-1]) - 1))]
+first_subnet_broadcast = joinList(first_subnet_broadcast)
+
+first_subnet_last_host = first_subnet_broadcast.split(".")[:3] + [str((int(first_subnet_broadcast.split(".")[-1]) - 1))]
+first_subnet_last_host = joinList(first_subnet_last_host)
+# first_subnet_last_host = ".".join(str(first_subnet_last_host[j]) for j in range(len(first_subnet_last_host)))
+print(f'First subnet\'s first host: {first_host}')
+print(f'First subnet\'s last host: {first_subnet_last_host}')
+print(f'First subnet broadcast: {first_subnet_broadcast}')
+
+print(f'Next subnet: {next_subnet_firsthost}')
+
+
+last_subnet_id = last_host.split(".")[:3] + [str(int((last_host.split(".")[-1])) - hosts_amount + 2)]
+last_subnet_id = joinList(last_subnet_id)
+
+last_subnet_first_host = last_subnet_id.split(".")[:3] + [str(int((last_subnet_id.split(".")[-1])) + 1)]
+last_subnet_first_host = joinList(last_subnet_first_host)
+
+print()
+print(f'Last subnet\'s ID: {last_subnet_id}')
+print(f'Last subnet\'s first host: {last_subnet_first_host}')
+print(f'Last subnet\'s last host: {last_host}')
+print(f'Broadcast ID:{broadcast_id}')
 
 
 
