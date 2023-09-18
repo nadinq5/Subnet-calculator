@@ -13,7 +13,7 @@ def calculate_hosts(number_of_subnets, subnet_mask):
     if (host_power <= 0):
         print("Invalid amount of hosts, please choose a larger CIDR block.")
 
-    amount_of_hosts = 2 ** host_power // int(number_of_subnets)
+    amount_of_hosts = 2 ** host_power
     return amount_of_hosts
 
 

@@ -2,11 +2,13 @@ import math
 from network_broadcast import*
 def calculate_subnets(number_of_hosts, subnet_mask):
     bin_mask = []
+    print(subnet_mask)
     subnet_list = subnet_mask.split('.')
     for octet in list(subnet_list):
         octet = ipToBin(octet)
         bin_mask.append(octet)
-
+    print(bin_mask)
+    print((''.join(bin_mask)))
     number_of_zeroes = (''.join(bin_mask)).count('0')
     print("THIS IS NUMBER OF ZEROES ",number_of_zeroes)
 
@@ -14,6 +16,7 @@ def calculate_subnets(number_of_hosts, subnet_mask):
     print("HOST POWER ",host_power)
 
     subnet_power = number_of_zeroes - host_power
+    print("THIS IS SUBNET POWER ",subnet_power)
     if(subnet_power <= 0):
         print("Invalid amount of hosts, please choose a larger CIDR block.")
 

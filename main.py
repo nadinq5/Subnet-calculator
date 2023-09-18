@@ -39,7 +39,7 @@ while(user_input):
     else:
         print("Invalid input, please enter again: host/subnet")
         host_or_subnet = input()
-print("This is amount", amount)
-network_broadcast_address(subnet_mask, amount,user_amount, valid_ip)
+print("Subnet size: ", amount)
+network_broadcast_address(subnet_mask, amount, user_amount, valid_ip)
 
 

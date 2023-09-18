@@ -10,7 +10,7 @@ def ipToBin(ip):
 
 
 def network_broadcast_address(subnet_mask, hosts_amount, subnet_amount, ip_address):
-    octet_addition = (int(hosts_amount) // int(subnet_amount)) // 256
+    octet_addition = (int(hosts_amount) ) // 256
     # These return a list containing the octets, with each octet being stored in a different index altogether in a list
     subnet_list = subnet_mask.split('.')
     ip_list = ip_address.split('.')
@@ -84,7 +84,7 @@ def network_broadcast_address(subnet_mask, hosts_amount, subnet_amount, ip_addre
     last_host = joinList(last_host)
 
 
-    if (octet_addition > 1):
+    if (octet_addition >= 1):
         if(int(network_id.split(".")[-2]) < (255 - octet_addition)):
             next_subnet_id = network_id.split(".")[:2] + [(str(int(octet_addition)))] + [str(0)]
             next_subnet_id = joinList(next_subnet_id)
@@ -121,9 +121,9 @@ def network_broadcast_address(subnet_mask, hosts_amount, subnet_amount, ip_addre
     next_subnet_host = joinList(next_subnet_host)
     print(f'Second subnet first host: {next_subnet_host}')
 
-    if (octet_addition > 1):
-        if (int(network_id.split(".")[-2]) < (255 - octet_addition)):
-            next_subnet_broadcast = next_subnet_id.split(".")[:2] + [(str(int(octet_addition)))] + [str(0)]
+    if (octet_addition >= 1):
+        if (int(next_subnet_id.split(".")[-2]) < (255 - octet_addition)):
+            next_subnet_broadcast = next_subnet_id.split(".")[:2] + [(str(int(octet_addition) + int(next_subnet_id.split(".")[2])))] + [str(0)]
             next_subnet_broadcast = joinList(next_subnet_broadcast)
         else:
             next_subnet_broadcast = next_subnet_id.split(".")[:1] + [(str(int(octet_addition)))] + [str(0)] + [str(0)]
@@ -143,26 +143,29 @@ def network_broadcast_address(subnet_mask, hosts_amount, subnet_amount, ip_addre
 
     # next_subnet_broadcast = next_subnet_id.split(".")[:3] + [str((int(next_subnet_id.split(".")[-1]) + hosts_amount - 1))]
     # next_subnet_broadcast = joinList(next_subnet_broadcast)
-    print(f'Second subnet broadcast ID: {next_subnet_broadcast}')
 
-    next_subnet_last_host = next_subnet_broadcast.split(".")[:3] + [str((int(next_subnet_broadcast.split(".")[-1]) - 1))]
+
+    next_subnet_last_host = next_subnet_broadcast.split(".")[:2] + [str((int(next_subnet_broadcast.split(".")[-2]) - 1))] + ["255"]
     next_subnet_last_host = joinList(next_subnet_last_host)
     print(f'Second subnet last host: {next_subnet_last_host}')
+    print(f'Second subnet broadcast ID: {next_subnet_broadcast}')
     print()
 
 
+    if (octet_addition >= 1):
+        last_subnet_id = last_host.split(".")[:2] + [str(int(last_host.split(".")[-2]) - int(octet_addition))] + ["0"]
+        last_subnet_id = joinList(last_subnet_id)
+    #last_subnet_id = last_host.split(".")[:3] + [str(int((last_host.split(".")[-1])) - hosts_amount + 2)]
 
-    last_subnet_id = last_host.split(".")[:3] + [str(int((last_host.split(".")[-1])) - hosts_amount + 2)]
-    last_subnet_id = joinList(last_subnet_id)
 
-    second_last_subnet_broadcast = last_subnet_id.split(".")[:3] + [str(int((last_subnet_id.split(".")[-1])) - 1)]
+    second_last_subnet_broadcast = last_subnet_id.split(".")[:2] + [str(int((last_subnet_id.split(".")[-2])) - 1)] + ["255"]
     second_last_subnet_broadcast = joinList(second_last_subnet_broadcast)
 
 
     second_last_subnet_last_host = second_last_subnet_broadcast.split(".")[:3] + [str(int((second_last_subnet_broadcast.split(".")[-1])) - 1)]
     second_last_subnet_last_host = joinList(second_last_subnet_last_host)
 
-    second_last_subnet_first_host = last_subnet_id.split(".")[:3] + [str(int((last_subnet_id.split(".")[-1])) - hosts_amount)]
+    second_last_subnet_first_host = last_subnet_id.split(".")[:2] + [str(int((last_subnet_id.split(".")[-2])) - octet_addition)] + ["1"]
     second_last_subnet_first_host = joinList(second_last_subnet_first_host)
 
 
