@@ -92,20 +92,20 @@ last_host = joinList(last_host)
 
 hosts_amount = 16
 if(int(network_id.split(".")[-1]) < (255 - hosts_amount)):
-    next_subnet_firsthost = network_id.split(".")[:3] + ((([str(int(network_id.split(".")[-1]) + hosts_amount)])))
-    next_subnet_firsthost = joinList(next_subnet_firsthost)
+    next_subnet_id = network_id.split(".")[:3] + ((([str(int(network_id.split(".")[-1]) + hosts_amount)])))
+    next_subnet_id = joinList(next_subnet_id)
 elif(int(network_id.split(".")[-1]) == 255):
     if(int(network_id.split(".")[-2]) < (255 - hosts_amount)):
-        first_subnet_broadcast = network_id.split(".")[:2] + ([str(int(network_id.split(".")[-2]) + 1)]) + str(hosts_amount - 1)
-        first_subnet_broadcast = joinList(first_host)
+        next_subnet_id = network_id.split(".")[:2] + ([str(int(network_id.split(".")[-2]) + 1)]) + str(hosts_amount - 1)
+        next_subnet_id = joinList(next_subnet_id)
     elif(int(network_id.split(".")[-2]) == 255):
         if(int(network_id.split(".")[-3]) < (255 - hosts_amount)):
-            first_subnet_broadcast = network_id.split(".")[:1] + ([str(int(network_id.split(".")[-3]) + 1)]) + "0" + str(hosts_amount - 1)
-            first_subnet_broadcast = joinList(first_host)
+            next_subnet_id = network_id.split(".")[:1] + ([str(int(network_id.split(".")[-3]) + 1)]) + "0" + str(hosts_amount - 1)
+            next_subnet_id = joinList(next_subnet_id)
 
 
 
-first_subnet_broadcast = next_subnet_firsthost.split(".")[:3] + [str((int(next_subnet_firsthost.split(".")[-1]) - 1))]
+first_subnet_broadcast = next_subnet_id.split(".")[:3] + [str((int(next_subnet_id.split(".")[-1]) - 1))]
 first_subnet_broadcast = joinList(first_subnet_broadcast)
 
 first_subnet_last_host = first_subnet_broadcast.split(".")[:3] + [str((int(first_subnet_broadcast.split(".")[-1]) - 1))]
@@ -114,12 +114,45 @@ first_subnet_last_host = joinList(first_subnet_last_host)
 print(f'First subnet\'s first host: {first_host}')
 print(f'First subnet\'s last host: {first_subnet_last_host}')
 print(f'First subnet broadcast: {first_subnet_broadcast}')
+print()
+print(f'Next subnet ID: {next_subnet_id}')
 
-print(f'Next subnet: {next_subnet_firsthost}')
+next_subnet_host = next_subnet_id.split(".")[:3] + [str((int(next_subnet_id.split(".")[-1]) + 1))]
+next_subnet_host = joinList(next_subnet_host)
+print(f'Next subnet first host: {next_subnet_host}')
+
+next_subnet_broadcast = next_subnet_id.split(".")[:3] + [str((int(next_subnet_id.split(".")[-1]) + hosts_amount - 1))]
+next_subnet_broadcast = joinList(next_subnet_broadcast)
+print(f'Next subnet broadcast ID: {next_subnet_broadcast}')
+
+next_subnet_last_host = next_subnet_broadcast.split(".")[:3] + [str((int(next_subnet_broadcast.split(".")[-1]) - 1))]
+next_subnet_last_host = joinList(next_subnet_last_host)
+print(f'Next subnet last host: {next_subnet_last_host}')
+print()
+
 
 
 last_subnet_id = last_host.split(".")[:3] + [str(int((last_host.split(".")[-1])) - hosts_amount + 2)]
 last_subnet_id = joinList(last_subnet_id)
+
+second_last_subnet_broadcast = last_subnet_id.split(".")[:3] + [str(int((last_subnet_id.split(".")[-1])) - 1)]
+second_last_subnet_broadcast = joinList(second_last_subnet_broadcast)
+
+
+second_last_subnet_last_host = second_last_subnet_broadcast.split(".")[:3] + [str(int((second_last_subnet_broadcast.split(".")[-1])) - 1)]
+second_last_subnet_last_host = joinList(second_last_subnet_last_host)
+
+second_last_subnet_first_host = last_subnet_id.split(".")[:3] + [str(int((last_subnet_id.split(".")[-1])) - hosts_amount)]
+second_last_subnet_first_host = joinList(second_last_subnet_first_host)
+
+
+second_last_subnet_id = second_last_subnet_first_host.split(".")[:3] + [str(int((second_last_subnet_first_host.split(".")[-1])) - 1)]
+second_last_subnet_id = joinList(second_last_subnet_id)
+print(f'Second last subnet ID: {second_last_subnet_id}')
+print(f'Second last subnet first host: {second_last_subnet_first_host}')
+print(f'Second last subnet last host: {second_last_subnet_last_host}')
+print(f'Second last subnet broadcast: {second_last_subnet_broadcast}')
+
 
 last_subnet_first_host = last_subnet_id.split(".")[:3] + [str(int((last_subnet_id.split(".")[-1])) + 1)]
 last_subnet_first_host = joinList(last_subnet_first_host)
